@@ -1,0 +1,11 @@
+Django==4.2.14
+djangorestframework
+markdown
+drf-yasg[validation]
+# Authentication
+djangorestframework-simplejwt
+python-decouple==3.8
+psycopg==3.2.1
+psycopg-binary==3.2.1
+chess
+django-cors-headers
