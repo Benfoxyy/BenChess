@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Chess Board - Local chessboard.js</title>
+  
+  <!-- Local chessboard.js CSS -->
+  <link rel="stylesheet" href="css/chessboard-1.0.0.min.css">
+  
+  <!-- jQuery (still loaded via CDN for convenience) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+          integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"
+          crossorigin="anonymous"></script>
+</head>
+<body>
+  <h2>Chess Game</h2>
+  <div id="board" style="width: 400px; margin-bottom: 1em;"></div>
+  <h3 id="detail" style="font-family: monospace; font-size: 18px;"></h3>
+  <pre id="fen" style="font-family: monospace; font-size: 18px;"></pre>
+
+  <!-- Local chessboard.js JS -->
+  <script src="js/chessboard-1.0.0.min.js"></script>
+
+  <script>
+    let board;
+    let currentFen = '';
+
+    window.onload = function () {
+      board = Chessboard('board', {
+        draggable: true,
+        dropOffBoard: 'snapback',
+        sparePieces: false,
+        onDrop: function (source, target) {
+          const move = source + target;
+
+          fetch('http://localhost:8000/game/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fen: currentFen, move: move })
+          })
+          .then(response => response.json())
+          .then(data => {
+            currentFen = data.FEN;
+            board.position(currentFen);
+            document.getElementById('fen').textContent = currentFen;
+            document.getElementById('detail').textContent = data.Detail || '';
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            return 'snapback';
+          });
+        }
+      });
+
+      fetch('http://localhost:8000/game/')
+        .then(res => res.json())
+        .then(data => {
+          currentFen = data.FEN;
+          board.position(currentFen);
+          document.getElementById('fen').textContent = currentFen;
+          document.getElementById('detail').textContent = data.Detail || '';
+        })
+        .catch(error => console.error('Error fetching board:', error));
+    };
+  </script>
+</body>
+</html>
