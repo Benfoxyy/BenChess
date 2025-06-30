@@ -1,4 +1,3 @@
-from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .stockfish_engine import StockfishWrapper
@@ -9,38 +8,29 @@ class GameView(APIView):
         fen = request.query_params.get("fen", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
         board = engine.get_board(fen)
         return Response({"Board": str(board), "FEN": board.fen()})
-    
+
     def post(self, request, *args, **kwargs):
         engine = StockfishWrapper()
         fen = request.data.get("fen", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-        move = request.data.get("move", None)
+        move = request.data.get("move")
         board = engine.get_best_move(fen, move)
-        if board.is_game_over():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Game Over"})
-        if board.is_checkmate():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Checkmate"})
-        if board.is_stalemate():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Stalemate"})
-        if board.is_insufficient_material():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Insufficient Material"})
-        if board.is_seventyfive_moves():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Draw by 75-move rule"})
-        if board.is_fivefold_repetition():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Draw by fivefold repetition"})
-        if board.is_variant_draw():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Variant Draw"})
-        if board.is_check():
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Check"})
-        return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Your Turn"})
-    
 
-class UndoView(GenericAPIView):
-    def post(self, request, *args, **kwargs):
-        engine = StockfishWrapper()
-        fen = request.data.get("fen")
-        print(fen)
-        board = engine.undo_move(fen)
-        print(board.move_stack)
-        if not board.move_stack:
-            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "No moves to undo"})
-        return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Move Undone"})
+        detail = "Your Turn"
+        if board.is_game_over():
+            detail = "Game Over"
+        elif board.is_checkmate():
+            detail = "Checkmate"
+        elif board.is_stalemate():
+            detail = "Stalemate"
+        elif board.is_insufficient_material():
+            detail = "Insufficient Material"
+        elif board.is_seventyfive_moves():
+            detail = "Draw by 75-move rule"
+        elif board.is_fivefold_repetition():
+            detail = "Draw by fivefold repetition"
+        elif board.is_variant_draw():
+            detail = "Variant Draw"
+        elif board.is_check():
+            detail = "Check"
+
+        return Response({"Board": str(board), "FEN": board.fen(), "Detail": detail})

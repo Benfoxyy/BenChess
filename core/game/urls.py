@@ -5,5 +5,4 @@ app_name = "game"
 
 urlpatterns = [
     path("", views.GameView.as_view(), name="game"),
-    path("undo/", views.UndoView.as_view(), name="undo"),
 ]
