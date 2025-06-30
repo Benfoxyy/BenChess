@@ -20,6 +20,14 @@ class StockfishWrapper:
         result = self.engine.play(board, chess.engine.Limit(time=time_limit))
         board.push(result.move)
         return board  # return the updated board with the move pushed
+    
+    def undo_move(self, fen):
+        board = chess.Board(fen)
+        if board.move_stack:
+            board.pop()  # undo Stockfish move
+        if board.move_stack:
+            board.pop()  # undo player move
+        return board
 
     def quit(self):
         self.engine.quit()

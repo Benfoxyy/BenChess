@@ -32,3 +32,15 @@ class GameView(APIView):
         if board.is_check():
             return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Check"})
         return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Your Turn"})
+    
+
+class UndoView(GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        engine = StockfishWrapper()
+        fen = request.data.get("fen")
+        print(fen)
+        board = engine.undo_move(fen)
+        print(board.move_stack)
+        if not board.move_stack:
+            return Response({"Board": str(board), "FEN": board.fen(), "Detail": "No moves to undo"})
+        return Response({"Board": str(board), "FEN": board.fen(), "Detail": "Move Undone"})
