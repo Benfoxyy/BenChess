@@ -7,17 +7,19 @@ BenChess is a fully interactive chess web application that lets you play against
 
 <h1>🚀 Features</h1>
 
-- ✔️ Play against Stockfish via browser
+✔️ Play against Stockfish via browser
 
-- ✔️ Modern chessboard with intuitive controls
+✔️ Modern chessboard with intuitive controls
 
-- ✔️ Move validation and automatic Stockfish replies
+✔️ Move validation and automatic Stockfish replies
 
-- ✔️ Board updates with check/checkmate/draw detection
+✔️ Board updates with check/checkmate/draw detection
 
-- ✔️ Dockerized with one-command setup
+✔️ Dockerized with one-command setup
 
-- ✔️ Responsive frontend UI
+✔️ Deployed with Nginx and Gunicorn
+
+✔️ Responsive frontend UI
 
 <h1>🛠️ Getting Started</h1>
 
@@ -32,11 +34,11 @@ cd BenChess
 Make sure Docker and Docker Compose are installed.
 
 ```bash
-docker-compose up --build
+docker-compose -f docker-compose-prod up --build
 ```
-The backend API will be available at: http://localhost:8000/swagger/
+The backend API will be available at: http://localhost/swagger/
 
-The frontend (static HTML/JS) will be available at: http://localhost:5500/frontend/ (if served with Live Server or similar)
+The frontend (static HTML/JS) will be available at: http://localhost/
 
 <h1>✅ TODO / Roadmap</h1>
 
