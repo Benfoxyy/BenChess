@@ -36,9 +36,8 @@ Make sure Docker and Docker Compose are installed.
 ```bash
 docker-compose -f docker-compose-prod up --build
 ```
-The backend API will be available at: http://localhost/swagger/
 
-The frontend (static HTML/JS) will be available at: http://localhost/
+The result will be available at: http://localhost/
 
 <h1>✅ TODO / Roadmap</h1>
 
