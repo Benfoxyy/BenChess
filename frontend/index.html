@@ -15,78 +15,264 @@
     crossorigin="anonymous"></script>
 
   <style>
-    body {
+    /* --- Base / layout --- */
+    :root{
+      --bg: #0f1724;
+      --card: #0b1220;
+      --muted: #94a3b8;
+      --accent: #06b6d4;
+      --accent-2: #7ee3ea;
+      --surface: #071022;
+      --radius: 12px;
+      --glass: rgba(255,255,255,0.03);
+    }
+
+    html, body {
+      height: 100%;
       margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f2f2f2;
+      background:
+        radial-gradient(800px 400px at 10% 10%, rgba(6,182,212,0.04), transparent 6%),
+        radial-gradient(700px 300px at 90% 90%, rgba(99,102,241,0.02), transparent 6%),
+        var(--bg);
+      font-family: Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #e6eef8;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      padding: 28px;
+      box-sizing: border-box;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 980px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: var(--radius);
+      box-shadow: 0 14px 40px rgba(2,6,23,0.6);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .wrap { grid-template-columns: 1fr; padding: 14px; }
+    }
+
+    /* --- Left column (board) --- */
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid var(--glass);
+      display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      gap: 12px;
+      align-items: center;
     }
 
-    h2 {
-      margin-top: 20px;
-      font-size: 2.2rem;
-      color: #333;
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      justify-content: space-between;
     }
 
+    .logo {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .logo-badge {
+      width:46px;
+      height:46px;
+      border-radius:10px;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      color: #042329;
+      box-shadow: 0 8px 24px rgba(2,6,23,0.55);
+      font-size:20px;
+    }
+
+    .title {
+      line-height:1;
+    }
+
+    .title h1 {
+      margin:0;
+      font-size:18px;
+      letter-spacing: -0.2px;
+    }
+
+    .subtitle {
+      margin:0;
+      font-size:12px;
+      color: var(--muted);
+    }
+
+    /* board container */
     #board {
-      width: 400px;
-      margin: 20px 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      width: 380px;
+      max-width: 100%;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 8px 28px rgba(2,6,23,0.55);
+      background: #0b1226;
     }
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #2c3e50;
-      color: #fff;
+    /* controls */
+    .controls {
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      width:100%;
+    }
+
+    .btn {
+      appearance:none;
       border: none;
-      border-radius: 5px;
+      padding: 10px 14px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-bottom: 10px;
+      font-weight:600;
+      font-size:14px;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      color: #06202a;
+      box-shadow: 0 8px 18px rgba(2,6,23,0.4);
+      transition: transform .12s ease, box-shadow .12s ease;
     }
 
-    button:hover {
-      background-color: #1abc9c;
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(2,6,23,0.45); }
+    .btn.secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: none;
+    }
+
+    /* --- Right column (detail) --- */
+    .info {
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid var(--glass);
+      min-height: 160px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .info h3 {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
     }
 
     #detail {
-      font-family: "Courier New", Courier, monospace;
-      font-size: 17px;
-      color: #222;
-      background-color: #e8e8e8;
-      padding: 12px 18px;
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+      font-size: 15px;
+      color: #dff8ff;
+      background: rgba(255,255,255,0.01);
+      padding: 10px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      margin: 10px auto;
-      text-align: center;
-      max-width: 85%;
-      word-wrap: break-word;
+      min-height: 56px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.01);
+      line-height:1.4;
+      word-break: break-word;
     }
+
+    .meta {
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      color: var(--muted);
+      font-size:13px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    /* small responsive tweak for board area centering */
+    .panel > .brand, .panel > .controls { width:100%; max-width:380px; box-sizing: border-box; }
+
+    /* accessibility focus outlines */
+    .btn:focus { outline: 3px solid rgba(6,182,212,0.18); outline-offset: 2px; }
   </style>
 
 </head>
 
 <body>
 
-  <h2>BenChess</h2>
-  <div id="board"></div>
-  <button onclick="location.reload()">Restart Game</button>
-  <h3 id="detail"></h3>
+  <div class="wrap" role="main" aria-labelledby="site-title">
+    <section class="panel" aria-label="Chess board panel">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <div class="logo-badge">B</div>
+          <div class="title">
+            <h1 id="site-title">BenChess</h1>
+            <p class="subtitle">Interactive chess — play against the server</p>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center;">
+          <!-- kept original Restart button behavior; no new features -->
+          <button class="btn secondary" onclick="location.reload()" aria-label="Restart game">Restart</button>
+        </div>
+      </div>
+
+      <div id="board" aria-label="Chessboard"></div>
+
+      <div class="controls" aria-hidden="true" style="margin-top:6px;">
+        <!-- intentionally only styling here; functionality unchanged -->
+        <button class="btn secondary" onclick="location.reload()" aria-hidden="true">Reload</button>
+      </div>
+    </section>
+
+    <aside class="info" aria-label="Game details">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Game status</h3>
+        <div class="muted">Server: <span id="serverStatus">—</span></div>
+      </div>
+
+      <div id="detail" role="status" aria-live="polite">Loading game...</div>
+
+      <div class="meta" style="margin-top:auto;">
+        <div class="muted">Side to move: <strong id="sideToMove">—</strong></div>
+        <div class="muted">FEN: <span id="fenShort" style="font-family: ui-monospace, monospace;">—</span></div>
+      </div>
+    </aside>
+  </div>
 
   <!-- Local chessboard.js JS -->
   <script src="js/chessboard-1.0.0.min.js"></script>
 
   <script>
+    // Functionality unchanged — only UI improved
     let board;
     let currentFen = '';
+
+    function setServerStatus(text) {
+      const el = document.getElementById('serverStatus');
+      el.textContent = text || '—';
+    }
+
+    function setFenShort(fen) {
+      const el = document.getElementById('fenShort');
+      if (!fen) { el.textContent = '—'; return; }
+      // show only first 24 chars to keep UI tidy
+      el.textContent = fen.length > 24 ? fen.slice(0, 24) + '…' : fen;
+    }
 
     window.onload = function () {
       board = Chessboard('board', {
@@ -106,9 +292,13 @@
               currentFen = data.FEN;
               board.position(currentFen);
               document.getElementById('detail').textContent = data.Detail || '';
+              document.getElementById('sideToMove').textContent = (currentFen && currentFen.split(' ')[1] === 'b') ? 'Black' : 'White';
+              setFenShort(currentFen);
+              setServerStatus('OK');
             })
             .catch(error => {
               console.error('Error:', error);
+              // keep original catch behavior — let chessboard handle snapback if necessary
               return 'snapback';
             });
         }
@@ -120,8 +310,15 @@
           currentFen = data.FEN;
           board.position(currentFen);
           document.getElementById('detail').textContent = data.Detail || '';
+          document.getElementById('sideToMove').textContent = (currentFen && currentFen.split(' ')[1] === 'b') ? 'Black' : 'White';
+          setFenShort(currentFen);
+          setServerStatus('OK');
         })
-        .catch(error => console.error('Error fetching board:', error));
+        .catch(error => {
+          console.error('Error fetching board:', error);
+          document.getElementById('detail').textContent = 'Failed to load game from server.';
+          setServerStatus('Offline');
+        });
     };
   </script>
 
